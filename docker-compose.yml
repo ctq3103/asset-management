@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+  asset-be:
+    build:
+      context: asset-management-backend
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    networks:
+      - asset-network
+    environment:
+      - DB_USERNAME=quynhchu
+      - DB_PASSWORD=quynhchu
+    depends_on:
+      - mysql-container
+ 
+  asset-fe:
+    build: 
+      context: asset-management-frontend
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    networks:
+      - asset-network
+
+  mysql-container:
+    image: mysql:8
+    restart: always
+    networks:
+      - asset-network
+    volumes:
+      - dbdata:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=quynhchu
+      - MYSQL_DATABASE=assetdb
+      - MYSQL_USER=quynhchu
+      - MYSQL_PASSWORD=quynhchu
+networks:
+  asset-network: 
+volumes:
+  dbdata:
